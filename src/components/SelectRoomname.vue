@@ -1,7 +1,7 @@
 <template>
-    <div class="select-username">
+    <div class="select-roomname">
         <form @submit.prevent="onSubmit">
-            <input v-model="username" placeholder="Your username..." />
+            <input v-model="roomname" placeholder="Your roomname..." />
             <button :disabled="!isValid">Send</button>
         </form>
     </div>
@@ -9,27 +9,27 @@
 
 <script>
     export default {
-        name: "SelectUsername",
+        name: "SelectRoomname",
         data() {
             return {
-                username: "",
+                roomname: "",
             };
         },
         computed: {
             isValid() {
-                return this.username.length > 2;
+                return this.roomname.length > 2 && this.roomname.match(/[A-Za-z0-9\-_]/g);
             },
         },
         methods: {
             onSubmit() {
-                this.$emit("input", this.username);
+                this.$emit("input", this.roomname);
             },
         },
     };
 </script>
 
 <style scoped>
-    .select-username {
+    .select-roomname {
         width: 100vw;
         height: 100vh;
         

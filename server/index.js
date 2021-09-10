@@ -15,33 +15,19 @@ io.use((socket, next) => {
 });
 
 io.on("connection", (socket) => {
-    // fetch existing users
-    const users = [];
-    for (let [id, socket] of io.of("/").sockets) {
-    users.push({
-        userID: id,
-        username: socket.username,
-    });
-    }
-    socket.emit("users", users);
-
-    // notify existing users
-    socket.broadcast.emit("user connected", {
-    userID: socket.id,
-    username: socket.username,
-    });
-
-    // forward the private message to the right recipient
-    socket.on("private message", ({ content, to }) => {
-    socket.to(to).emit("private message", {
-        content,
-        from: socket.id,
-    });
-    });
-
-    // notify users upon disconnection
+    
     socket.on("disconnect", () => {
-    socket.broadcast.emit("user disconnected", socket.id);
+        io.to(socket.rooms[1]).emit("room userlist", getUserList(socket));
+        socket.leave(socket.rooms[1]);
+    });
+
+    socket.on("room join", (roomname) => {
+        socket.join(roomname);
+    });
+    
+
+    socket.on("room userlist", () => {
+        io.to(socket.rooms[1]).emit("room userlist", getUserList(socket));
     });
 });
 
@@ -50,3 +36,13 @@ const PORT = process.env.PORT || 3000;
 httpServer.listen(PORT, () =>
     console.log(`server listening at http://localhost:${PORT}`)
 );
+
+let getUserList = socket => {
+    let users = [];
+    for (let [id, localsocket] of io.of("/").sockets) {
+        if(localsocket.rooms[1] == socket.rooms[1] && id) {
+            users.push(localsocket.username);
+        }
+    }
+    return users;
+}
