@@ -2,20 +2,20 @@
     <div id="app">
         <select-roomname v-if="!roomnameAlreadySelected" @input="onRoomnameSelection" />
         <select-username v-else-if="!usernameAlreadySelected" @input="onUsernameSelection" />
-        <game v-else />
+        <lobby v-else />
     </div>
 </template>
 
 <script>
     import SelectUsername from "./components/SelectUsername";
     import SelectRoomname from "./components/SelectRoomname";
-    import Game from "./components/Game";
+    import Lobby from "./components/Lobby";
     import socket from "./socket";
 
     export default {
         name: "App",
         components: {
-            Game,
+            Lobby,
             SelectUsername,
             SelectRoomname,
         },

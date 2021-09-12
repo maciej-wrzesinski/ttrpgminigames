@@ -1,19 +1,26 @@
 <template>
     <div>
-    TU KOMPONENT GRA
+        <li v-for="user in users" :key="user">
+            {{ user }}
+        </li>
+        {{ owner }}
+        <game />
     </div>
 </template>
 
 <script>
+    import Game from "../components/Game";
     import socket from "../socket";
 
     export default {
-        name: "Game",
+        name: "Lobby",
         components: { 
+            Game,
         },
         data() {
             return {
                 users: [],
+                owner: '',
             };
         },
         methods: {
@@ -24,9 +31,10 @@
             });
 
             socket.on("room userlist", (users) => {
-                console.log('room userlist');
-                console.log(users);
                 this.users = users;
+                if(this.owner === '') {
+                    this.owner = users[0];
+                }
             });
         },
         unmounted() {

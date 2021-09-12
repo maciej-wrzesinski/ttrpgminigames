@@ -27,7 +27,10 @@ io.on("connection", (socket) => {
     
 
     socket.on("room userlist", () => {
-        io.to(socket.rooms[1]).emit("room userlist", getUserList(socket));
+        let roomName = Array.from(socket.rooms)[1];
+        if(typeof roomName !== 'undefined') {
+            io.to(roomName).emit("room userlist", getUserList(socket));
+        }
     });
 });
 
