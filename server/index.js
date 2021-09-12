@@ -25,7 +25,6 @@ io.on("connection", (socket) => {
         socket.join(roomname);
     });
     
-
     socket.on("room userlist", () => {
         let roomName = Array.from(socket.rooms)[1];
         if(typeof roomName !== 'undefined') {
@@ -44,7 +43,7 @@ let getUserList = socket => {
     let users = [];
     for (let [id, localsocket] of io.of("/").sockets) {
         if(localsocket.rooms[1] == socket.rooms[1] && id) {
-            users.push(localsocket.username);
+            users.push({'username': localsocket.username, 'userID': id});
         }
     }
     return users;

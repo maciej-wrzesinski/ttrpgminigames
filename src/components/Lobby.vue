@@ -1,29 +1,49 @@
 <template>
     <div>
-        <li v-for="user in users" :key="user">
-            {{ user }}
-        </li>
-        {{ owner }}
-        <game />
+        <div class="left-panel">
+            <user
+                v-for="user in users"
+                :key="user.userID"
+                :user="user"
+                @select="onUserSelect(user)"
+            />
+        </div>
+        <div class="right-panel">
+            <game />
+        </div>
     </div>
 </template>
 
 <script>
     import Game from "../components/Game";
+    import User from "../components/User";
     import socket from "../socket";
 
     export default {
         name: "Lobby",
         components: { 
             Game,
+            User,
         },
         data() {
             return {
-                users: [],
-                owner: '',
+                users: {},
+                players: [],
             };
         },
         methods: {
+            onUserSelect(user) {
+                if(socket.id === user.userID) {
+                    let playingUser = this.players.find(player => player === user);
+                    if(playingUser){
+                        this.players.splice(this.players.indexOf(playingUser), 1);
+                    }
+                    else {
+                        this.players.push(user);
+                    }
+                    console.log(this.players);
+                }
+            },
         },
         created() {
             socket.on("connect", () => {
@@ -32,9 +52,6 @@
 
             socket.on("room userlist", (users) => {
                 this.users = users;
-                if(this.owner === '') {
-                    this.owner = users[0];
-                }
             });
         },
         unmounted() {
