@@ -8,8 +8,11 @@ npm install
 
 ### Compiles and hot-reloads for development
 ```
-npm run serve
 cd ./server/
+npm run start
+```
+```
+cd ./web/
 npm run start
 ```
 

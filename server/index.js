@@ -1,39 +1,29 @@
 const httpServer = require("http").createServer();
 const io = require("socket.io")(httpServer, {
     cors: {
-        origin: "http://localhost:8080",
+        origin: "http://localhost:3000",
+        methods: ["GET", "POST"],
     },
 });
 
-io.use((socket, next) => {
-    const username = socket.handshake.auth.username;
-    if (!username) {
-        return next(new Error("invalid username"));
-    }
-    socket.username = username;
-    next();
-});
-
 io.on("connection", (socket) => {
-    
+    console.log(`User Connected: ${socket.id}`);
+  
+    socket.on("join_room", (data) => {
+      socket.join(data);
+      console.log(`User with ID: ${socket.id} joined room: ${data}`);
+    });
+  
+    socket.on("send_message", (data) => {
+      socket.to(data.room).emit("receive_message", data);
+    });
+  
     socket.on("disconnect", () => {
-        io.to(socket.rooms[1]).emit("room userlist", getUserList(socket));
-        socket.leave(socket.rooms[1]);
+      console.log("User Disconnected", socket.id);
     });
+  });
 
-    socket.on("room join", (roomname) => {
-        socket.join(roomname);
-    });
-    
-    socket.on("room userlist", () => {
-        let roomName = Array.from(socket.rooms)[1];
-        if(typeof roomName !== 'undefined') {
-            io.to(roomName).emit("room userlist", getUserList(socket));
-        }
-    });
-});
-
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 4000;
 
 httpServer.listen(PORT, () =>
     console.log(`server listening at http://localhost:${PORT}`)
@@ -41,8 +31,10 @@ httpServer.listen(PORT, () =>
 
 let getUserList = socket => {
     let users = [];
+    let roomname = Array.from(socket.rooms)[1];
     for (let [id, localsocket] of io.of("/").sockets) {
-        if(localsocket.rooms[1] == socket.rooms[1] && id) {
+        let localroomname = Array.from(localsocket.rooms)[1];
+        if(localroomname === roomname && id) {
             users.push({'username': localsocket.username, 'userID': id});
         }
     }
