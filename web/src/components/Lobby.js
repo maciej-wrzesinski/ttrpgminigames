@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 
-function Chat({ socket, username, room }) {
+function Lobby({ socket, username, room }) {
     const [currentMessage, setCurrentMessage] = useState("");
     const [messageList, setMessageList] = useState([]);
 
@@ -73,4 +73,4 @@ function Chat({ socket, username, room }) {
     );
 }
 
-export default Chat;
+export default Lobby;
