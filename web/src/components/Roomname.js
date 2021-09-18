@@ -13,7 +13,7 @@ function Roomname({ socket, setStage }) {
         if (roomname.length <= 2) {
             return false;
         }
-        if (roomname.match(/[A-Za-z0-9\-_]/g) === false) {
+        if (!roomname.match(/[A-Za-z0-9]/g)) {
             return false;
         }
 

@@ -27,7 +27,7 @@ function App() {
             <div className="App">
                 {showRoomname === "ROOMNAME" && <Roomname socket={socket} setStage={setStage} />}
                 {showRoomname === "USERNAME" && <Username socket={socket} setStage={setStage} />}
-                {showRoomname === "LOBBY" && <Lobby socket={socket} setStage={setStage} />} 
+                {showRoomname === "LOBBY" && <Lobby socket={socket} />} 
             </div>
         </emotion.ThemeProvider>
     );

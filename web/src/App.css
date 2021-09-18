@@ -23,6 +23,34 @@ body {
     justify-content: space-evenly;
 }
 
+.window-overview {
+    width: 100vw;
+    height: 100vh;
+    
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-evenly;
+}
+
+.window-userlist {
+    width: 15vw;
+    height: 90vh;
+    
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.window-game {
+    width: 55vw;
+    height: 90vh;
+    
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
 .window-input {
     display: flex;
     flex-direction: row;
@@ -32,9 +60,30 @@ body {
 
 input {
     height: 34px;
-    margin-bottom: -2px;
+    border-color: #00f8f8 !important;
+    color: #00f8f8 !important;
+    font-size: 0.875rem !important;
+    padding: 17px !important;
 }
 
 svg {
     filter: none !important;
+}
+
+input:hover,textarea:hover,select:hover,input:focus,textarea:focus,select:focus{
+    border-color:#7efcf6 !important;
+    background-color:rgba(0,248,248,0.3) !important;
+    box-shadow: none !important;
+}
+
+input::-webkit-input-placeholder {
+    color:rgba(0, 122, 122, 1) !important;
+}
+
+input::-moz-placeholder {
+    color:rgba(0, 122, 122, 1) !important;
+}
+
+input:-ms-input-placeholder {
+    color:rgba(0, 122, 122, 1) !important;
 }

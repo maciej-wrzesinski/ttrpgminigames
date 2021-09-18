@@ -21,7 +21,7 @@ function Username({ socket, setStage }) {
             return;
         }
         
-        socket.emit("join_room", username);
+        socket.emit("set_name", username);
         setStage("LOBBY");
     };
 
