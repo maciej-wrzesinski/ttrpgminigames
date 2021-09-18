@@ -7,21 +7,27 @@ const io = require("socket.io")(httpServer, {
 });
 
 io.on("connection", (socket) => {
-    console.log(`User Connected: ${socket.id}`);
+    console.log(`User with ID: ${socket.id} connected`);
   
+    socket.on("set_name", (data) => {
+        socket.username = data;
+        
+        io.to(socket.roomname).emit("user_list", getUserList(socket.roomname));
+    });
+
     socket.on("join_room", (data) => {
-      socket.join(data);
-      console.log(`User with ID: ${socket.id} joined room: ${data}`);
+        socket.join(data);
+        socket.roomname = data;
     });
-  
+
     socket.on("send_message", (data) => {
-      socket.to(data.room).emit("receive_message", data);
+        socket.to(data.room).emit("receive_message", data);
     });
-  
+
     socket.on("disconnect", () => {
-      console.log("User Disconnected", socket.id);
+        io.to(socket.roomname).emit("user_list", getUserList(socket.roomname));
     });
-  });
+});
 
 const PORT = process.env.PORT || 4000;
 
@@ -29,12 +35,10 @@ httpServer.listen(PORT, () =>
     console.log(`server listening at http://localhost:${PORT}`)
 );
 
-let getUserList = socket => {
+let getUserList = roomname => {
     let users = [];
-    let roomname = Array.from(socket.rooms)[1];
     for (let [id, localsocket] of io.of("/").sockets) {
-        let localroomname = Array.from(localsocket.rooms)[1];
-        if(localroomname === roomname && id) {
+        if(localsocket.roomname === roomname && id) {
             users.push({'username': localsocket.username, 'userID': id});
         }
     }
