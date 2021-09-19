@@ -1,20 +1,13 @@
-import { ArwesThemeProvider, StylesBaseline, FrameHexagon } from "@arwes/core";
-import { AnimatorGeneralProvider } from "@arwes/animation";
-
-const animatorGeneral = { duration: { enter: 300, exit: 300 } };
+import { ArwesThemeProvider, FrameHexagon } from "@arwes/core";
 
 function Game({ socket }) {
-    
     return (
         <ArwesThemeProvider>
-            <StylesBaseline />
-            <AnimatorGeneralProvider animator={animatorGeneral}>
-                <FrameHexagon>
-                    <div className="window-game">
-                        here is the game
-                    </div>
-                </FrameHexagon>
-            </AnimatorGeneralProvider>
+            <FrameHexagon inverted>
+                <div className="window-game">
+                    GAME
+                </div>
+            </FrameHexagon>
         </ArwesThemeProvider>
     );
 }

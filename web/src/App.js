@@ -20,7 +20,7 @@ function App() {
         <emotion.ThemeProvider theme={theme}>
             <emotion.Global styles={{
                 'html, body': {
-                    fontFamily: 'monospace',
+                    fontFamily: '"Titillium Web"',
                     backgroundColor: theme.palette.neutral.elevate(0)
                 }
             }} />

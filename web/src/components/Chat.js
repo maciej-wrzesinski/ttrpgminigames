@@ -1,75 +1,52 @@
 import React, { useEffect, useState } from "react";
+import { ArwesThemeProvider, FrameHexagon, FrameBox, Button, Text, FrameLines } from "@arwes/core";
+import ScrollToBottom from 'react-scroll-to-bottom';
 
-function Chat({ socket, username, room }) {
+function Chat({ socket }) {
     const [currentMessage, setCurrentMessage] = useState("");
     const [messageList, setMessageList] = useState([]);
 
-    const sendMessage = async () => {
-        if (currentMessage !== "") {
-            const messageData = {
-                room: room,
-                author: username,
-                message: currentMessage,
-                time:
-                    new Date(Date.now()).getHours() +
-                    ":" +
-                    new Date(Date.now()).getMinutes(),
-            };
-
-            await socket.emit("send_message", messageData);
-            setMessageList((list) => [...list, messageData]);
-            setCurrentMessage("");
-        }
+    const sendMessage = () => {
+        socket.emit("send_message", currentMessage);
+        setCurrentMessage("");
     };
 
-    useEffect(() => {
-        socket.on("receive_message", (data) => {
-            setMessageList((list) => [...list, data]);
-        });
-    }, [socket]);
+    useEffect(() => { 
+        socket.on("receive_message", data => setMessageList(list => [...list, data]));
+     }, [socket]);
 
     return (
-        <div className="chat-window">
-            <div className="chat-header">
-                <p>Live Chat</p>
-            </div>
-            <div className="chat-body">
-                <div className="message-container">
-                    {messageList.map((messageContent) => {
-                        return (
-                            <div
-                                className="message"
-                                id={username === messageContent.author ? "you" : "other"}
-                            >
-                                <div>
-                                    <div className="message-content">
-                                        <p>{messageContent.message}</p>
-                                    </div>
-                                    <div className="message-meta">
-                                        <p id="time">{messageContent.time}</p>
-                                        <p id="author">{messageContent.author}</p>
-                                    </div>
-                                </div>
-                            </div>
-                        );
-                    })}
+        <ArwesThemeProvider>
+            <FrameHexagon>
+                <div className="window-chat">
+                    <div>
+                        <p>LIVE CHAT</p>
+                    </div>
+                    <div className="window-chat-body">
+                        <FrameBox linesWidths={[1, 0, 1, 0]}>
+                            <ScrollToBottom className="window-chat-messages">
+                                {messageList.map(message => {
+                                    return (
+                                        <div key={message.timestamp} className={socket.id === message.id ? "window-chat-message-you" : "window-chat-message-somebody"}>
+                                            <FrameLines animator={{ root: true }}>
+                                                <div className="window-chat-message">
+                                                    <div className="window-chat-message-author"><b>{message.username}</b></div>
+                                                    <div className="window-chat-message-content">{message.content}</div>
+                                                </div>
+                                            </FrameLines>
+                                        </div>
+                                    );
+                                })}
+                            </ScrollToBottom>
+                        </FrameBox>
+                        <div className="window-input">
+                            <input type="text" value={currentMessage} placeholder="Hey..." onChange={event => setCurrentMessage(event.target.value)} onKeyPress={event => event.key === "Enter" && sendMessage()} />
+                            <Button onClick={sendMessage}><Text>&#9658;</Text></Button>
+                        </div>
+                    </div>
                 </div>
-            </div>
-            <div className="chat-footer">
-                <input
-                    type="text"
-                    value={currentMessage}
-                    placeholder="Hey..."
-                    onChange={(event) => {
-                        setCurrentMessage(event.target.value);
-                    }}
-                    onKeyPress={(event) => {
-                        event.key === "Enter" && sendMessage();
-                    }}
-                />
-                <button onClick={sendMessage}>&#9658;</button>
-            </div>
-        </div>
+            </FrameHexagon>
+        </ArwesThemeProvider>
     );
 }
 

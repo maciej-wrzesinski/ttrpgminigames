@@ -45,8 +45,8 @@ function Roomname({ socket, setStage }) {
                             <Text>Please enter roomname.</Text>
                         </div>
                         <div className="window-input">
-                            <input type="text" placeholder="[ROOMNAME]" onChange={event => { setRoomname(event.target.value); setActivate(ableToJoinRoom()); }} />
-                            <Button disabled={!activate} onClick={joinRoom}><Text>Enter</Text></Button>
+                            <input type="text" placeholder="[ROOMNAME]" onKeyPress={event => event.key === "Enter" && joinRoom() } onChange={event => { setRoomname(event.target.value); setActivate(ableToJoinRoom()); }} />
+                            <Button disabled={!activate} onClick={joinRoom}><Text>&#9658;</Text></Button>
                         </div>
                     </div>
                 </FrameHexagon>

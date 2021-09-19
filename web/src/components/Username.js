@@ -35,8 +35,8 @@ function Username({ socket, setStage }) {
                             <Text>Please enter username.</Text>
                         </div>
                         <div className="window-input">
-                            <input type="text" placeholder="[USERNAME]" onChange={event => { setUsername(event.target.value); setActivate(ableToApply()); }} />
-                            <Button disabled={!activate} onClick={applyUsername}><Text>Apply</Text></Button>
+                            <input type="text" placeholder="[USERNAME]" onKeyPress={event => event.key === "Enter" && applyUsername() } onChange={event => { setUsername(event.target.value); setActivate(ableToApply()); }} />
+                            <Button disabled={!activate} onClick={applyUsername}><Text>&#9658;</Text></Button>
                         </div>
                     </div>
                 </FrameHexagon>

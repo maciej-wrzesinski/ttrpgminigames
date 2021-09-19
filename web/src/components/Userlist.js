@@ -1,8 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { ArwesThemeProvider, StylesBaseline, FrameHexagon } from "@arwes/core";
-import { AnimatorGeneralProvider } from "@arwes/animation";
-
-const animatorGeneral = { duration: { enter: 300, exit: 300 } };
+import { ArwesThemeProvider, FrameHexagon, FrameBox } from "@arwes/core";
 
 function Userlist({ socket }) {
     const [userlist, setUserList] = useState([]);
@@ -15,16 +12,18 @@ function Userlist({ socket }) {
 
     return (
         <ArwesThemeProvider>
-            <StylesBaseline />
-            <AnimatorGeneralProvider animator={animatorGeneral}>
-                <FrameHexagon>
-                    <div className="window-userlist">
-                        {userlist.map(user => (
-                            <div key={user.userID}>{user.username}</div>
-                        ))}
+            <FrameHexagon animator={{ root: true }}>
+                <div className="window-userlist">
+                    <p>PLAYER LIST</p>
+                        <FrameBox linesWidths={[1, 0, 1, 0]}>
+                            <div className="window-userlist-list">
+                                {userlist.map(user => (
+                                    <div key={user.userID}><b>{user.username}</b></div>
+                                ))}
+                            </div>
+                        </FrameBox>
                     </div>
-                </FrameHexagon>
-            </AnimatorGeneralProvider>
+            </FrameHexagon>
         </ArwesThemeProvider>
     );
 }

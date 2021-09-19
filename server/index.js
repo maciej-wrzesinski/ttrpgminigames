@@ -6,34 +6,25 @@ const io = require("socket.io")(httpServer, {
     },
 });
 
-io.on("connection", (socket) => {
-    console.log(`User with ID: ${socket.id} connected`);
-  
-    socket.on("set_name", (data) => {
-        socket.username = data;
-        
+io.on("connection", socket => {
+    socket.on("set_name", username => {
+        socket.username = username;
         io.to(socket.roomname).emit("user_list", getUserList(socket.roomname));
     });
 
-    socket.on("join_room", (data) => {
-        socket.join(data);
-        socket.roomname = data;
+    socket.on("join_room", roomname => {
+        socket.roomname = roomname;
+        socket.join(roomname);
     });
 
-    socket.on("send_message", (data) => {
-        socket.to(data.room).emit("receive_message", data);
-    });
+    socket.on("send_message", messagedata => io.to(socket.roomname).emit("receive_message", {id: socket.id, timestamp: Date.now(), username: socket.username, content: messagedata }));
 
-    socket.on("disconnect", () => {
-        io.to(socket.roomname).emit("user_list", getUserList(socket.roomname));
-    });
+    socket.on("disconnect", () => io.to(socket.roomname).emit("user_list", getUserList(socket.roomname)));
 });
 
 const PORT = process.env.PORT || 4000;
 
-httpServer.listen(PORT, () =>
-    console.log(`server listening at http://localhost:${PORT}`)
-);
+httpServer.listen(PORT);
 
 let getUserList = roomname => {
     let users = [];
